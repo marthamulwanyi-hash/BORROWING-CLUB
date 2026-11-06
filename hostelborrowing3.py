@@ -13,7 +13,8 @@ from typing import Protocol
 class SupportsDetails(Protocol):
     def get_details(self) -> str:
         ...
-
+# A class defines an object type. For example, HostelMember is a class and
+# HostelMember("S001", "Alex") creates a member object from that class.
 
 class BorrowingError(Exception):
     """Raised when an item or member cannot complete a borrowing operation."""
@@ -86,7 +87,8 @@ class BorrowableItem(ABC):
             f"(loan: {self.loan_days} {loan_length})"
         )
 
-
+# INHERITANCE: each item category is a more specific kind of BorrowableItem.
+# Subclasses reuse its common ID, stock, condition, borrow, and return logic.
 class LinenItem(BorrowableItem):
     @property
     def category(self) -> str:
@@ -196,6 +198,7 @@ class HostelMember:
     def name(self) -> str:
         return self._name
 
+ # OBJECTS: each Loan instance connects one particular member and item.
 
 class Loan:
     """Connects a hostel member, an item, and their borrowing dates."""
@@ -254,8 +257,9 @@ class Loan:
         self._item.return_item()
         self._returned_on = returned_on
 
+ # OBJECTS: each request instance tracks one member's request for one item.
 
-class BorrowingRequest:
+class BorrowingRequest: 
     """A member's request to borrow an item, awaiting staff approval."""
 
     PENDING = "Pending"
@@ -474,6 +478,11 @@ def describe_item(item: SupportsDetails) -> str:
 
 def build_sample_club() -> HostelBorrowingClub:
     """Create the club and its sample hostel inventory."""
+    
+ # POLYMORPHISM: this one collection contains objects from different
+    # subclasses. The loop constructs item objects and the rest of the system
+    # uses their shared BorrowableItem interface.
+    
     club = HostelBorrowingClub()
     inventory: tuple[tuple[type[BorrowableItem], str, str, int], ...] = (
         (LinenItem, "BED-001", "Bedsheet", 20),
