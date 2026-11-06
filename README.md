@@ -1,66 +1,97 @@
 # Hostel Borrowing Club
 
-A command-line hostel inventory and borrowing system written in Python. Members can browse available items and submit borrowing requests. Staff can approve or reject requests, while the program tracks active loans, due dates, overdue items, and returns.
+A command-line Python program for managing a hostel's shared inventory.
+Members can register and request items. Staff can approve or reject requests,
+and approved requests become loans with a due date.
 
 ## Requirements
 
 - Python 3.10 or later
 - No third-party packages
 
-## Run
+## Run the program
 
-From the project directory, run:
+Open a terminal in the project directory and run:
 
 ```bash
 python hostelborrowing3.py
 ```
 
-On Windows, you can also use the Python launcher:
+On Windows, you can also use:
 
 ```powershell
 py -3 hostelborrowing3.py
 ```
 
-## Features
+## Use the menu
 
-- View sample inventory and available stock
-- Register hostel members
-- Submit borrowing requests for staff approval
-- Approve or reject pending requests
-- Track loans, due dates, and overdue status
-- Return items and restore available stock
-- View active loans and a member's requests
+1. Select **1** to view the inventory and item IDs.
+2. Select **2** to register a member with their student ID and name.
+3. Select **3** to request an item using its item ID and the registered
+   member's student ID.
+4. Select **4** to review pending requests. Enter the request ID, then enter
+   `a` to approve or `r` to reject. An approved request creates a loan.
+5. Select **5** to return a loan using its loan ID.
+6. Select **6** to view active loans and any overdue items.
+7. Select **7** to view a member's requests using their student ID.
+8. Select **0** to exit.
 
-To borrow an item, first register the member, then submit a request using the item's ID and the member's student ID. Staff approval creates a loan and reduces the available stock. Each item type has its own loan period.
+Example:
 
-## Classes and Objects
+```text
+Choose an option: 2
+Student ID: S001
+Member name: Alex Student
 
-A **class** defines the data and behavior that its objects share. An **object** is a specific instance created from a class while the program runs.
+Choose an option: 3
+Item ID: KIT-008
+Student ID: S001
 
-| Class | Purpose |
-| --- | --- |
-| `BorrowableItem` | Abstract base class defining shared inventory behavior. |
-| `LinenItem`, `KitchenItem`, `ApplianceItem`, `CleaningItem`, `StudyItem`, `SportsItem`, `LadderItem` | Item classes that define categories and loan periods. |
-| `PressureCooker`, `ElectricKettle`, `Iron` | Specialized item classes that inherit from other item classes. |
-| `HostelMember` | Represents a registered member. |
-| `BorrowingRequest` | Represents a member's pending, approved, or rejected request. |
-| `Loan` | Represents an item borrowed by a member, including its due and return dates. |
-| `HostelBorrowingClub` | Manages the inventory, members, requests, and loans. |
+Choose an option: 4
+Request ID to review (Enter to cancel): R0001
+Approve or reject? (a/r): a
+```
 
-Examples of objects created by the application:
+Use your own student ID and name. The program displays available item IDs,
+request IDs, loan IDs, and due dates as you use it.
 
-- `club` is a `HostelBorrowingClub` object containing the running session's data.
-- A sample item such as `BED-001` (Bedsheet) is a `LinenItem` object.
-- Registering a student creates a `HostelMember` object.
-- Submitting a request creates a `BorrowingRequest` object; staff approval creates a related `Loan` object.
+## Sample inventory
 
-## OOP Concepts
+| Category | Item IDs | Items |
+|---|---|---|
+| Bedding | `BED-001`–`BED-006` | Bedsheet, blanket, pillow, pillowcase, mosquito net, mattress protector |
+| Kitchen | `KIT-001`–`KIT-009` | Dinner plate, cup or mug, spoon and fork set, cooking pot, frying pan, electric kettle, serving bowl, 6L and 3L pressure cookers |
+| Laundry and appliances | `APP-001`–`APP-005` | Steam iron, extension cable, desk fan, phone charger, power adapter |
+| Maintenance | `MNT-001` | Aluminium ladder |
+| Cleaning | `CLN-001`–`CLN-006` | Bucket, basin, broom, mop, dustpan and brush, laundry basket |
+| Study | `STD-001`–`STD-004` | Scientific calculator, dictionary, study lamp, laptop stand |
+| Sports | `SPT-001`–`SPT-005` | Football, volleyball, badminton racket, board game, skipping rope |
 
-- **Abstraction:** `BorrowableItem` defines a common contract for inventory items.
-- **Inheritance and polymorphism:** Item subclasses provide item-specific categories and loan periods.
-- **Encapsulation:** Class properties expose member, item, request, and loan data while keeping state management inside the classes.
-- **Duck typing:** Inventory display accepts objects that provide a `get_details()` method.
+Each item category defines its own loan period. Available stock and due dates
+are shown by the program.
 
-## Data Persistence
+## Object-oriented programming concepts
 
-Inventory, members, requests, and loans are held in memory. They return to the sample state when the program exits; records are not currently saved to a file or database.
+- **Classes and objects:** `HostelMember`, `BorrowingRequest`, `Loan`, and
+  `HostelBorrowingClub` are classes. Registering a member or creating a loan
+  constructs an object (an instance of a class).
+- **Abstraction:** `BorrowableItem` is an abstract base class. Its abstract
+  `category` and `loan_days` properties define what concrete item classes must
+  provide.
+- **Encapsulation:** `BorrowableItem` keeps item data in underscore-prefixed
+  fields and changes stock through `borrow()` and `return_item()`.
+- **Inheritance:** item categories such as `KitchenItem` and `LinenItem`
+  inherit shared behavior from `BorrowableItem`. `PressureCooker` and
+  `ElectricKettle` inherit from `KitchenItem`.
+- **Polymorphism:** `get_details()` uses each item's own category and loan
+  period, while the inventory can display different item subclasses through
+  the same interface.
+- **Duck typing:** `describe_item()` calls `get_details()` on an item. Objects
+  that provide this method can be displayed without being a particular class.
+
+## Data storage and limitations
+
+Members, inventory changes, requests, and loans are held in memory. They reset
+when the program exits. The program does not save records to a file or
+database, and this version does not track item condition. Keep it running
+while members submit requests and staff review them.
